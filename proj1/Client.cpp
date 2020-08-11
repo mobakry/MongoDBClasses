@@ -21,7 +21,7 @@ Client::~Client()
 {
 	if (this->m_pClient != nullptr)
 	{
-		mongoc_client_destroy(m_pClient);
+		mongoc_client_destroy(this->m_pClient);
 		this->m_pClient = nullptr;
 	}
 }

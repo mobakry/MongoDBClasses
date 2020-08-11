@@ -12,4 +12,11 @@
 
 #define MaxNumberOfTrials	3
 
+
+struct InsertManyReturnStruct
+{
+	bool Result;
+	int InsertCount;
+};
+
 // TODO: reference additional headers your program requires here
