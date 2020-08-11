@@ -1,0 +1,4 @@
+﻿  proj1.cpp
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(62): warning C4244: '=': conversion from 'time_t' to 'int', possible loss of data
+  proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.exe
+  proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.pdb (Full PDB)
