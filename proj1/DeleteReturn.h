@@ -8,9 +8,12 @@ class CDeleteReturn : public CBsonSerializer
 public:
 	CDeleteReturn();
 	~CDeleteReturn();
-	void Iterator(CBson*);
-	DeleteReturnStruct GetReturnStruct();
-	void SetReturnStruct(bool, int);
+	void Serialize(CBson*);
+	inline DeleteReturnStruct GetReturnStruct() { return this->m_ReturnStruct; }
+	inline void SetReturnStruct(bool Result, int deletedCount) {
+		this->m_ReturnStruct.Result = Result;
+		this->m_ReturnStruct.deletedCount = deletedCount;
+	}
 private:
 	DeleteReturnStruct m_ReturnStruct;
 };

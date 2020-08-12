@@ -1,8 +1,8 @@
 ﻿  proj1.cpp
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(53): warning C4101: 'DeleteReturn': unreferenced local variable
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(51): warning C4101: 'InsertManyReturn': unreferenced local variable
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(50): warning C4101: 'DeleteOneResult': unreferenced local variable
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(45): warning C4101: 'Cursor': unreferenced local variable
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(49): warning C4101: 'InsertOneResult': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(53): warning C4101: 'InsertManyReturn': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(54): warning C4101: 'UpdateReturn': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(52): warning C4101: 'DeleteOneResult': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(51): warning C4101: 'InsertOneResult': unreferenced local variable
+cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.exe
   proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.pdb (Full PDB)

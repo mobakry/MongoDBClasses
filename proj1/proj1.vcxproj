@@ -149,8 +149,10 @@
     <ClInclude Include="BsonSerializer.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Collection.h" />
+    <ClInclude Include="Cursor.h" />
     <ClInclude Include="DataBase.h" />
     <ClInclude Include="DeleteReturn.h" />
+    <ClInclude Include="DocumentSerializer.h" />
     <ClInclude Include="InsertManyReturn.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -161,8 +163,10 @@
     <ClCompile Include="BsonSerializer.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Collection.cpp" />
+    <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DataBase.cpp" />
     <ClCompile Include="DeleteReturn.cpp" />
+    <ClCompile Include="DocumentSerializer.cpp" />
     <ClCompile Include="InsertManyReturn.cpp" />
     <ClCompile Include="proj1.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -11,7 +11,7 @@ CDeleteReturn::~CDeleteReturn()
 {
 }
 
-void CDeleteReturn::Iterator(CBson* Document) {
+void CDeleteReturn::Serialize(CBson* Document) {
 
 	bson_iter_t iter;
 	const bson_value_t *deletedCountValue;
@@ -20,14 +20,4 @@ void CDeleteReturn::Iterator(CBson* Document) {
 		deletedCountValue = bson_iter_value(&iter);
 		SetReturnStruct(TRUE, deletedCountValue->value.v_int32);
 	}
-}
-
-DeleteReturnStruct CDeleteReturn::GetReturnStruct() {
-	return this->m_ReturnStruct;
-}
-
-void CDeleteReturn::SetReturnStruct(bool Result, int deletedCount) {
-	this->m_ReturnStruct.Result = Result;
-	this->m_ReturnStruct.deletedCount = deletedCount;
-
 }

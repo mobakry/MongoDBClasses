@@ -7,6 +7,6 @@ class CBsonSerializer
 public:
 	CBsonSerializer();
 	~CBsonSerializer();
-	virtual void Iterator(CBson*) = 0;
+	virtual void Serialize(CBson*) = 0;
 };
 

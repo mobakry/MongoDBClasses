@@ -7,9 +7,15 @@ class CUpdateReturn : public CBsonSerializer
 public:
 	CUpdateReturn();
 	~CUpdateReturn();
-	void Iterator(CBson*);
-	UpdateReturnStruct GetReturnStruct();
-	void SetReturnStruct(bool, int, int);
+	void Serialize(CBson*);
+	inline UpdateReturnStruct GetReturnStruct() { return this->m_ReturnStruct; }
+
+	inline void SetReturnStruct(bool Result, int matchedCount, int modifiedCount) {
+		this->m_ReturnStruct.Result = Result;
+		this->m_ReturnStruct.matchedCount = matchedCount;
+		this->m_ReturnStruct.modifiedCount = modifiedCount;
+
+	}
 private:
 	UpdateReturnStruct m_ReturnStruct;
 };

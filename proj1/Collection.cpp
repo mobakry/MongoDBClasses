@@ -12,20 +12,20 @@ Collection::Collection()
 
 Collection::Collection(Client* client, const char *l_pDatabaseName, const char *l_pCollectionName)
 {
-	this->m_pCollection = mongoc_client_get_collection(client->GetClient_t(), l_pDatabaseName, l_pCollectionName);
+	this->m_pCollection = mongoc_client_get_collection(client->GetClient(), l_pDatabaseName, l_pCollectionName);
 }
 
 Collection::Collection(DataBase* database, const char *l_pCollectionName)
 {
-	mongoc_database_get_collection(database->GetDataBase_t(), l_pCollectionName);
+	mongoc_database_get_collection(database->GetDataBase(), l_pCollectionName);
 }
 
 Collection::~Collection()
 {
-	if (m_pCollection != nullptr)
+	if (this->m_pCollection != nullptr)
 	{
 		mongoc_collection_destroy(this->m_pCollection);
-		m_pCollection = NULL;
+		this->m_pCollection = NULL;
 	}
 }
 
@@ -63,9 +63,8 @@ InsertManyReturnStruct Collection::CollectionInsertMany(CBson* Bsons, const size
 	bson_error_t *pError = nullptr;
 	CInsertManyReturn InsertManyReturn;
 	size_t i;
-	bson_t** Documents;
-	Documents = (bson_t**)calloc(NubmerOfDocuments, sizeof(bson_t*));
-	
+	bson_t** Documents = new bson_t*[NubmerOfDocuments];
+
 	for (i = 0; i < NubmerOfDocuments; i++) {
 
 		Documents[i] = Bsons[i].GetDocument();
@@ -76,15 +75,15 @@ InsertManyReturnStruct Collection::CollectionInsertMany(CBson* Bsons, const size
 		if (mongoc_collection_insert_many(this->GetCollection(), (const bson_t**)Documents, NubmerOfDocuments, Options.GetDocument(), Reply.GetDocument(), pError))
 		{
 
-			InsertManyReturn.Iterator(&Reply);
-			free(Documents);
+			InsertManyReturn.Serialize(&Reply);
+			delete(Documents);
 			return InsertManyReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
 	}while (pError->domain != MONGOC_ERROR_STREAM || NumberOfTrials < MaxNumberOfTrials);
 	
 	InsertManyReturn.SetReturnStruct(FALSE, 0);
-	free(Documents);
+	delete(Documents);
 	return InsertManyReturn.GetReturnStruct();
 }
 
@@ -111,7 +110,7 @@ UpdateReturnStruct Collection::CollectionUpdateOne(CBson* Selector, CBson* Updat
 		if (mongoc_collection_update_one(this->GetCollection(), Selector->GetDocument(), Update->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
 			//printf("%s\n", bson_as_json(Reply.GetDocument(),NULL));
-			UpdateReturn.Iterator(&Reply);
+			UpdateReturn.Serialize(&Reply);
 			return UpdateReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
@@ -131,7 +130,7 @@ UpdateReturnStruct Collection::CollectionUpdateMany(CBson* Selector, CBson* Upda
 	do {
 		if (mongoc_collection_update_many(this->GetCollection(), Selector->GetDocument(), Update->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-			UpdateReturn.Iterator(&Reply);
+			UpdateReturn.Serialize(&Reply);
 			return UpdateReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
@@ -151,7 +150,7 @@ UpdateReturnStruct Collection::CollectionReplaceOne(CBson* Selector, CBson* repl
 	do {
 		if (mongoc_collection_replace_one(this->GetCollection(), Selector->GetDocument(), replacement->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-			UpdateReturn.Iterator(&Reply);
+			UpdateReturn.Serialize(&Reply);
 			return UpdateReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
@@ -193,7 +192,7 @@ DeleteReturnStruct Collection::CollectionDeleteMany(CBson* Selector)
 	do {
 		if (mongoc_collection_delete_many(this->GetCollection(), Selector->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-			DeleteReturn.Iterator(&Reply);
+			DeleteReturn.Serialize(&Reply);
 			return DeleteReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;

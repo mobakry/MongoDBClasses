@@ -16,8 +16,11 @@ CBson::CBson( CBson& doc) {
 	this->m_pDocument = bson_copy(doc.GetDocument());
 }
 
-CBson::~CBson(){
-	bson_destroy(this->m_pDocument);
+CBson::~CBson() {
+	if (this->m_pDocument != nullptr){
+		bson_destroy(this->m_pDocument);
+		this->m_pDocument = nullptr;
+	}
 }
 
 bson_t* CBson::GetDocument(void) {

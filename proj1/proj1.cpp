@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 						}";
 
 	char *Selector = "{ \"date\": \"11/08/2020\" }";
-	char *Update = "{ \"$set\" : { \"date\":\"05/10/2020\" }";
+	char *Update = "{ \"$set\" : { \"date\":\"05/10/2020\"} }";
 	char *Replacement = "{ \"date\" : \"20/9/2020\" }";
 	char *Filter = "{ \"date\": \"11/08/2020\" }";
 
@@ -35,14 +35,16 @@ int main(int argc, char *argv[])
 
 
 	/*****************************************BSON Objects*****************************************/
-	CBson		Bson1(document1, -1);
-	CBson		Bson2(document2, -1);
 	CBson		BsonSelector(Selector, -1);
 	CBson		BsonUpdate(Update, -1);
+	/*
+	CBson		Bson1(document1, -1);
+	CBson		Bson2(document2, -1);
 	CBson		BsonReplacement(Replacement, -1);
 	CBson		BsonFilter(Filter, -1);
 	CBson		BsonArray[2] = {Bson1,Bson2};
 	mongoc_cursor_t *Cursor;
+	*/
 	/*****************************************end of BSON Objects*****************************************/
 
 	/*****************************************Return Structures*****************************************/
@@ -81,25 +83,29 @@ int main(int argc, char *argv[])
 	InsertManyReturn = coll.CollectionInsertMany(BsonArray,2);
 	printf("Result : %d\n", InsertManyReturn.Result);
 	printf("InsertCount : %d\n", InsertManyReturn.InsertCount);
+	UpdateReturn = coll.CollectionUpdateOne(&BsonSelector,&BsonUpdate);
 	UpdateReturn = coll.CollectionUpdateMany(&BsonSelector, &BsonUpdate);
 	UpdateReturn = coll.CollectionReplaceOne(&BsonSelector, &BsonReplacement);
 	DeleteOneResult = coll.CollectionDeleteOne(&BsonSelector);
-	DeleteReturn = coll.CollectionDeleteMany(&BsonSelector);
 	*/
 
-	UpdateReturn = coll.CollectionUpdateOne(&BsonSelector,&BsonUpdate);
-	printf("Result : %d\n", UpdateReturn.Result);
+	DeleteReturn = coll.CollectionDeleteMany(&BsonSelector);
+	printf("Result : %d\n", DeleteReturn.Result);
+	printf("DeletedCount : %d\n", DeleteReturn.deletedCount);
+
+	/*
 	printf("matchedCount : %d\n", UpdateReturn.matchedCount);
 	printf("modifiedCount : %d\n", UpdateReturn.modifiedCount);
-	/*
 	*/
 	/*****************************************end of CRUD Operations*****************************************/
 
-	/*
-	* Release our handles and clean up libmongoc
-	*/
 
+	BsonSelector.~CBson();
+	BsonUpdate.~CBson();
+	client.~Client();
+	db.~DataBase();
+	coll.~Collection();
+	
 	mongoc_cleanup();
-
 	return 0;
 }

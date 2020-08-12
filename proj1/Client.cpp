@@ -35,7 +35,7 @@ class Collection Client::collection(const char *l_pDatabaseName, const char *l_p
 	return Collection::Collection(this, l_pDatabaseName, l_pCollectionName);
 }
 
-mongoc_client_t * Client::GetClient_t() {
+mongoc_client_t * Client::GetClient() {
 	return this->m_pClient;
 }
 

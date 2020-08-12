@@ -10,7 +10,7 @@ public:
 	DataBase();
 	DataBase(Client*, const char*);
 	~DataBase();
-	mongoc_database_t * GetDataBase_t();
+	mongoc_database_t * GetDataBase();
 	class Collection operator[](const char*);
 private:
 	mongoc_database_t *m_pdatabase_t = nullptr;

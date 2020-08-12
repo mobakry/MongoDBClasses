@@ -10,7 +10,7 @@ public:
 	~Client();
 	class DataBase database(const char*);
 	class Collection collection(const char*, const char*);
-	mongoc_client_t * GetClient_t();
+	mongoc_client_t * GetClient();
 	class DataBase operator[](const char*);
 
 private:

@@ -8,16 +8,19 @@ DataBase::DataBase()
 
 DataBase::DataBase(Client* client, const char *l_pDatabaseName)
 {
-	this->m_pdatabase_t = mongoc_client_get_database(client->GetClient_t(), l_pDatabaseName);
+	this->m_pdatabase_t = mongoc_client_get_database(client->GetClient(), l_pDatabaseName);
 }
 
 DataBase::~DataBase()
 {
 	if (this->m_pdatabase_t != nullptr)
-		mongoc_database_destroy(m_pdatabase_t);
+	{
+		mongoc_database_destroy(this->m_pdatabase_t);
+		this->m_pdatabase_t = nullptr;
+	}
 }
 
-mongoc_database_t * DataBase::GetDataBase_t()
+mongoc_database_t * DataBase::GetDataBase()
 {
 	return this->m_pdatabase_t;
 }

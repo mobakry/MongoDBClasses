@@ -11,8 +11,8 @@ CInsertManyReturn::~CInsertManyReturn(){
 
 }
 
-void CInsertManyReturn::Iterator(CBson* Document) {
-	
+void CInsertManyReturn::Serialize(CBson* Document) {
+	/* "insertedCount" : 2 */
 	bson_iter_t iter;
 	const bson_value_t *value;
 	if (bson_iter_init(&iter, Document->GetDocument())) {
@@ -22,11 +22,3 @@ void CInsertManyReturn::Iterator(CBson* Document) {
 	}
 }
 
-InsertManyReturnStruct CInsertManyReturn::GetReturnStruct() {
-	return this->m_ReturnStruct;
-}
-
-void CInsertManyReturn::SetReturnStruct(bool Result, int InsertedCount) {
-	this->m_ReturnStruct.Result = Result;
-	this->m_ReturnStruct.InsertCount = InsertedCount;
-}

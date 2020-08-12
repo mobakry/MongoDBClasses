@@ -11,7 +11,7 @@ CUpdateReturn::~CUpdateReturn()
 {
 }
 
-void CUpdateReturn::Iterator(CBson* Document) {
+void CUpdateReturn::Serialize(CBson* Document) {
 
 	bson_iter_t iter;
 	const bson_value_t *matchedCountValue, *modifiedCountValue;
@@ -25,13 +25,3 @@ void CUpdateReturn::Iterator(CBson* Document) {
 	}
 }
 
-UpdateReturnStruct CUpdateReturn::GetReturnStruct() {
-	return this->m_ReturnStruct;
-}
-
-void CUpdateReturn::SetReturnStruct(bool Result, int matchedCount, int modifiedCount) {
-	this->m_ReturnStruct.Result = Result;
-	this->m_ReturnStruct.matchedCount = matchedCount;
-	this->m_ReturnStruct.modifiedCount = modifiedCount;
-
-}
