@@ -22,19 +22,19 @@ public:
 
 	/*Insert*/
 	bool CollectionInsertOne(CBson*);
-	bool CollectionInsertMany(CBson*, const size_t);
+	InsertManyReturnStruct CollectionInsertMany(CBson*, const size_t);
 
 	/*Query*/
 	mongoc_cursor_t* CollectionFind(CBson*);
 
 	/*Update*/
-	bool CollectionUpdateOne(CBson*, CBson*);
-	bool CollectionUpdateMany(CBson*, CBson*);
-	bool CollectionReplaceOne(CBson*, CBson*);
+	UpdateReturnStruct CollectionUpdateOne(CBson*, CBson*);
+	UpdateReturnStruct CollectionUpdateMany(CBson*, CBson*);
+	UpdateReturnStruct CollectionReplaceOne(CBson*, CBson*);
 
 	/*REMOVE*/
 	bool CollectionDeleteOne(CBson* );
-	bool CollectionDeleteMany(CBson*);
+	DeleteReturnStruct CollectionDeleteMany(CBson*);
 
 		
 private:

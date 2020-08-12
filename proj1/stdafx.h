@@ -19,4 +19,18 @@ struct InsertManyReturnStruct
 	int InsertCount;
 };
 
+struct UpdateReturnStruct
+{
+	bool Result;
+	int matchedCount;
+	int modifiedCount;
+};
+struct DeleteReturnStruct
+{
+	bool Result;
+	int deletedCount;
+};
+
+
+
 // TODO: reference additional headers your program requires here

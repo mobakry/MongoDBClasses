@@ -42,6 +42,12 @@
     <ClInclude Include="InsertManyReturn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UpdateReturn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeleteReturn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -66,6 +72,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="InsertManyReturn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdateReturn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeleteReturn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

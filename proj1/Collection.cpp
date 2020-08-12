@@ -2,6 +2,9 @@
 
 #include"Collection.h"
 #include"Bson.h"
+#include"InsertManyReturn.h"
+#include"UpdateReturn.h"
+#include"DeleteReturn.h"
 
 Collection::Collection()
 {
@@ -46,22 +49,19 @@ bool Collection::CollectionInsertOne(CBson* Bson)
 	
 	do{
 		if (mongoc_collection_insert_one(this->GetCollection(), Bson->GetDocument(), pOptions, &pReply, pError))
-		{
-			
 			return TRUE;
-		}
 		NumberOfTrials++;
 	} while (pError->domain != MONGOC_ERROR_STREAM || NumberOfTrials < MaxNumberOfTrials);
 
 	return FALSE;
 }
 
-/*InsertManyReturnStruct*/ bool Collection::CollectionInsertMany(CBson* Bsons, const size_t NubmerOfDocuments)
+InsertManyReturnStruct Collection::CollectionInsertMany(CBson* Bsons, const size_t NubmerOfDocuments)
 {
 	int NumberOfTrials = 0;
-	bson_t *pOptions = nullptr, pReply;
+	CBson Options , Reply;
 	bson_error_t *pError = nullptr;
-	InsertManyReturnStruct ReturnStruct;
+	CInsertManyReturn InsertManyReturn;
 	size_t i;
 	bson_t** Documents;
 	Documents = (bson_t**)calloc(NubmerOfDocuments, sizeof(bson_t*));
@@ -73,34 +73,19 @@ bool Collection::CollectionInsertOne(CBson* Bson)
 	
 	do {
 		
-		if (mongoc_collection_insert_many(this->GetCollection(), (const bson_t**)Documents, NubmerOfDocuments, pOptions, &pReply, pError))
+		if (mongoc_collection_insert_many(this->GetCollection(), (const bson_t**)Documents, NubmerOfDocuments, Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-		
-			/*********************/
-			bson_iter_t iter;
-			const bson_value_t *value;
-			if (bson_iter_init(&iter, &pReply)) {
-				while (bson_iter_next(&iter)) {
-					if (bson_iter_key(&iter) == "insertedCount") {
-						printf("000\n");
-						value = bson_iter_value(&iter);
-						printf("1111%s\n", value->value_type);
-					}
-				}
-			}
-			/*********************/
 
-			ReturnStruct.Result = TRUE;
-			printf("%s\n", bson_as_json(&pReply, NULL));
+			InsertManyReturn.Iterator(&Reply);
 			free(Documents);
-			return TRUE;
+			return InsertManyReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
 	}while (pError->domain != MONGOC_ERROR_STREAM || NumberOfTrials < MaxNumberOfTrials);
 	
-	ReturnStruct.Result = FALSE;
+	InsertManyReturn.SetReturnStruct(FALSE, 0);
 	free(Documents);
-	return FALSE;
+	return InsertManyReturn.GetReturnStruct();
 }
 
 
@@ -115,76 +100,80 @@ mongoc_cursor_t* Collection::CollectionFind(CBson* filter)
 }
 
 /************************************Update************************************/
-bool Collection::CollectionUpdateOne(CBson* Selector, CBson* Update)
+UpdateReturnStruct Collection::CollectionUpdateOne(CBson* Selector, CBson* Update)
 {
 	int NumberOfTrials = 0;
-	bson_t *pOptions = nullptr, pReply;
+	CBson Options, Reply;
+	CUpdateReturn UpdateReturn;
 	bson_error_t *pError = nullptr;
 	
 	do {
-		if (mongoc_collection_update_one(this->GetCollection(), Selector->GetDocument(), Update->GetDocument(), pOptions, &pReply, pError))
+		if (mongoc_collection_update_one(this->GetCollection(), Selector->GetDocument(), Update->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-			printf("%s\n", bson_as_json(&pReply, NULL));
-			return TRUE;
+			//printf("%s\n", bson_as_json(Reply.GetDocument(),NULL));
+			UpdateReturn.Iterator(&Reply);
+			return UpdateReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
 	} while (pError->domain != MONGOC_ERROR_STREAM || NumberOfTrials < MaxNumberOfTrials);
 
-	return FALSE;
+	UpdateReturn.SetReturnStruct(FALSE, 0, 0);
+	return UpdateReturn.GetReturnStruct();
 }
 
-bool Collection::CollectionUpdateMany(CBson* Selector, CBson* Update)
+UpdateReturnStruct Collection::CollectionUpdateMany(CBson* Selector, CBson* Update)
 {
 	int NumberOfTrials = 0;
-	bson_t *pOptions = nullptr, pReply;
+	CBson Options, Reply;
+	CUpdateReturn UpdateReturn;
 	bson_error_t *pError = nullptr;
-	
+
 	do {
-		if (mongoc_collection_update_many(this->GetCollection(), Selector->GetDocument(), Update->GetDocument(), pOptions, &pReply, pError))
+		if (mongoc_collection_update_many(this->GetCollection(), Selector->GetDocument(), Update->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-			
-			printf("%s\n", bson_as_json(&pReply, NULL));
-			return TRUE;
+			UpdateReturn.Iterator(&Reply);
+			return UpdateReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
 	} while (pError->domain != MONGOC_ERROR_STREAM || NumberOfTrials < MaxNumberOfTrials);
 
-	return FALSE;
+	UpdateReturn.SetReturnStruct(FALSE, 0, 0);
+	return UpdateReturn.GetReturnStruct();
 }
 
-bool Collection::CollectionReplaceOne(CBson* Selector, CBson* replacement)
+UpdateReturnStruct Collection::CollectionReplaceOne(CBson* Selector, CBson* replacement)
 {
 	int NumberOfTrials = 0;
-	bson_t *pOptions = nullptr, pReply;
+	CBson Options, Reply;
+	CUpdateReturn UpdateReturn;
 	bson_error_t *pError = nullptr;
-	
+
 	do {
-		if (mongoc_collection_replace_one(this->GetCollection(), Selector->GetDocument(), replacement->GetDocument(), pOptions, &pReply, pError))
+		if (mongoc_collection_replace_one(this->GetCollection(), Selector->GetDocument(), replacement->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-			
-			printf("%s\n", bson_as_json(&pReply, NULL));
-			return TRUE;
+			UpdateReturn.Iterator(&Reply);
+			return UpdateReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
 	} while (pError->domain != MONGOC_ERROR_STREAM || NumberOfTrials < MaxNumberOfTrials);
 
-	return FALSE;
+	UpdateReturn.SetReturnStruct(FALSE, 0, 0);
+	return UpdateReturn.GetReturnStruct();
 }
-
 
 /************************************REMOVE************************************/
 
 bool Collection::CollectionDeleteOne(CBson* Selector)
 {
 	int NumberOfTrials = 0;
-	bson_t *pOptions = nullptr, pReply;
+	CBson Options, Reply;
 	bson_error_t *pError = nullptr;
 	
 	do {
-		if (mongoc_collection_delete_one(this->GetCollection(), Selector->GetDocument(), pOptions, &pReply, pError))
+		if (mongoc_collection_delete_one(this->GetCollection(), Selector->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
 			
-			printf("%s\n", bson_as_json(&pReply, NULL));
+			//printf("%s\n", bson_as_json(&pReply, NULL));
 			return TRUE;
 		}
 		NumberOfTrials++;
@@ -193,21 +182,24 @@ bool Collection::CollectionDeleteOne(CBson* Selector)
 	return FALSE;
 }
 
-bool Collection::CollectionDeleteMany(CBson* Selector)
+DeleteReturnStruct Collection::CollectionDeleteMany(CBson* Selector)
 {
+		
 	int NumberOfTrials = 0;
-	bson_t *pOptions = nullptr, pReply;
+	CBson Options, Reply;
+	CDeleteReturn DeleteReturn;
 	bson_error_t *pError = nullptr;
-	
+
 	do {
-		if (mongoc_collection_delete_many(this->GetCollection(), Selector->GetDocument(), pOptions, &pReply, pError))
+		if (mongoc_collection_delete_many(this->GetCollection(), Selector->GetDocument(), Options.GetDocument(), Reply.GetDocument(), pError))
 		{
-			
-			printf("%s\n", bson_as_json(&pReply, NULL));
-			return TRUE;
+			DeleteReturn.Iterator(&Reply);
+			return DeleteReturn.GetReturnStruct();
 		}
 		NumberOfTrials++;
 	} while (pError->domain != MONGOC_ERROR_STREAM || NumberOfTrials < MaxNumberOfTrials);
 
-	return FALSE;
+	DeleteReturn.SetReturnStruct(FALSE, 0);
+	return DeleteReturn.GetReturnStruct();
 }
+
