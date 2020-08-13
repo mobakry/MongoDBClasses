@@ -1,8 +1,16 @@
 ﻿  proj1.cpp
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(53): warning C4101: 'InsertManyReturn': unreferenced local variable
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(54): warning C4101: 'UpdateReturn': unreferenced local variable
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(52): warning C4101: 'DeleteOneResult': unreferenced local variable
-c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(51): warning C4101: 'InsertOneResult': unreferenced local variable
-cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(113): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'uint64_t'
+  c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(113): note: consider using '%lld' in the format string
+  c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(113): note: consider using '%Id' in the format string
+  c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(113): note: consider using '%I64d' in the format string
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(118): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'uint64_t'
+  c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(118): note: consider using '%lld' in the format string
+  c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(118): note: consider using '%Id' in the format string
+  c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(118): note: consider using '%I64d' in the format string
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(60): warning C4101: 'DeleteReturn': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(57): warning C4101: 'InsertManyReturn': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(59): warning C4101: 'UpdateReturn': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(56): warning C4101: 'DeleteOneResult': unreferenced local variable
+c:\users\igfi\desktop\abdou\vs_projects\proj1\proj1\proj1.cpp(55): warning C4101: 'InsertOneResult': unreferenced local variable
   proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.exe
   proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.pdb (Full PDB)

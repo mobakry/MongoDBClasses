@@ -28,6 +28,10 @@ bson_t* CBson::GetDocument(void) {
 
 }
 
+void CBson::SetDocument(bson_t* Document) {
+	this->m_pDocument = new bson_t(*Document);
+}
+
 bool CBson::AppendDocument(const char* Key, const bson_t* Value){
 	BSON_APPEND_DOCUMENT(this->m_pDocument,Key,Value);
 	return TRUE;

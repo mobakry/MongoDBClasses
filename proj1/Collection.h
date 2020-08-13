@@ -18,7 +18,7 @@ public:
 	Collection(DataBase*, const char*);
 	~Collection();
 	mongoc_collection_t * GetCollection();
-
+	uint64_t CountDocuments(CBson*);
 
 	/*Insert*/
 	bool CollectionInsertOne(CBson*);

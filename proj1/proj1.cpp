@@ -1,9 +1,10 @@
 #include "stdafx.h"
-
 #include <iostream>
 #include"bson.h"
 #include"Client.h"
 #include"Bson.h"
+#include"Cursor.h"
+#include"DocumentSerializer.h"
 
 
 using namespace std;
@@ -29,32 +30,46 @@ int main(int argc, char *argv[])
 	char *Selector = "{ \"date\": \"11/08/2020\" }";
 	char *Update = "{ \"$set\" : { \"date\":\"05/10/2020\"} }";
 	char *Replacement = "{ \"date\" : \"20/9/2020\" }";
-	char *Filter = "{ \"date\": \"11/08/2020\" }";
+	char *Filter = "{ }";
 
-	/*****************************************end of Documents*****************************************/
+	/*****************************************end of Documents*************************************/
 
 
 	/*****************************************BSON Objects*****************************************/
+	/*
 	CBson		BsonSelector(Selector, -1);
 	CBson		BsonUpdate(Update, -1);
-	/*
 	CBson		Bson1(document1, -1);
 	CBson		Bson2(document2, -1);
 	CBson		BsonReplacement(Replacement, -1);
-	CBson		BsonFilter(Filter, -1);
 	CBson		BsonArray[2] = {Bson1,Bson2};
-	mongoc_cursor_t *Cursor;
 	*/
-	/*****************************************end of BSON Objects*****************************************/
+	CBson		BsonFilter(Filter, -1);
+	CBson DocumentObject;
+	bson_t *Document = nullptr;
+	
+	/*****************************************end of BSON Objects**********************************/
 
-	/*****************************************Return Structures*****************************************/
+
+	/*****************************************Return Types*****************************************/
 	bool InsertOneResult;
 	bool DeleteOneResult;
 	InsertManyReturnStruct InsertManyReturn;
+	Person *person;
 	UpdateReturnStruct		UpdateReturn;
 	DeleteReturnStruct		DeleteReturn;
-	/*****************************************end of Return Structures*****************************************/
+	mongoc_cursor_t *Cursor = nullptr;
 	
+	CDocumentSerializer DocumentSerializer;
+	/*****************************************end of Return Types**********************************/
+	
+
+	/*****************************************General Defines*****************************************/
+
+	uint64_t NoOfDocuents = 0;
+	uint64_t PersonId = 0;
+
+	/*****************************************end of General Defines**********************************/
 	
 	/*
 	* Required to initialize libmongoc's internals
@@ -70,11 +85,12 @@ int main(int argc, char *argv[])
 	* Get a handle on the database "db_name" and collection "coll_name"
 	*/
 	const char *l_pDataBaseName = "db_name";
-	const char *l_pCollectionName = "coll_name";
+	const char *l_pCollectionName = "test";
 	
 	DataBase db = client.database(l_pDataBaseName);
 	Collection coll = client.collection(l_pDataBaseName, l_pCollectionName);
 
+	NoOfDocuents = coll.CountDocuments(&BsonFilter);
 
 	/*****************************************CRUD Operations*****************************************/
 	/*
@@ -89,19 +105,41 @@ int main(int argc, char *argv[])
 	DeleteOneResult = coll.CollectionDeleteOne(&BsonSelector);
 	*/
 
+	
+
+	person = new Person[NoOfDocuents];
+	Cursor = coll.CollectionFind(&BsonFilter);
+
+	printf("%d\n", NoOfDocuents);
+	while (mongoc_cursor_next(Cursor, (const bson_t**)&Document)) {
+	DocumentObject.SetDocument(Document);
+	DocumentSerializer.Serialize(&DocumentObject, person[PersonId]);
+
+	printf("No %d:\n", PersonId);
+	printf("Name : %s\n", person[PersonId].Name);
+	printf("Age : %d\n", person[PersonId].Age);
+	printf("NumberOfRelatives : %d\n", person[PersonId].NumberOfRelatives);
+	printf("Family:\n");
+	for (int i = 0; i < person[PersonId].NumberOfRelatives; i++) {
+
+		printf("\tName : %s\n", person[PersonId].FamilyMembers[i].Name);
+		printf("\tRelation : %s\n\n", person[PersonId].FamilyMembers[i].Relation);
+	}
+	PersonId++;
+	}
+	/*
 	DeleteReturn = coll.CollectionDeleteMany(&BsonSelector);
 	printf("Result : %d\n", DeleteReturn.Result);
 	printf("DeletedCount : %d\n", DeleteReturn.deletedCount);
 
-	/*
 	printf("matchedCount : %d\n", UpdateReturn.matchedCount);
 	printf("modifiedCount : %d\n", UpdateReturn.modifiedCount);
 	*/
 	/*****************************************end of CRUD Operations*****************************************/
 
 
-	BsonSelector.~CBson();
-	BsonUpdate.~CBson();
+	//BsonSelector.~CBson();
+	//BsonUpdate.~CBson();
 	client.~Client();
 	db.~DataBase();
 	coll.~Collection();

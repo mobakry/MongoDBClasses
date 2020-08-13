@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <tchar.h>
 
+
 #define MaxNumberOfTrials			3
 #define MaxNameSize					128
 #define MaxRelationSize				32
@@ -27,22 +28,23 @@ struct UpdateReturnStruct
 	int matchedCount;
 	int modifiedCount;
 };
-struct DeleteReturnStruct
+typedef struct
 {
 	bool Result;
 	int deletedCount;
-};
+}DeleteReturnStruct;
 
-struct Family {
+typedef struct {
 	char Name[MaxNameSize];
 	char Relation[MaxRelationSize];
-};
+}Family;
 
-struct Person {
+
+typedef struct
+{
 	char Name[MaxNameSize];
-	int Age;
+	int Age = 10;
 	Family FamilyMembers[MaxNumberOfFamilyMembers];
 	int NumberOfRelatives = 0;
-};
+}Person;
 
-// TODO: reference additional headers your program requires here

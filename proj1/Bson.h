@@ -12,6 +12,7 @@ public:
 	CBson( CBson& doc);
 	~CBson();
 	bson_t* GetDocument(void);
+	void SetDocument(bson_t*);
 	bool AppendDocument(const char*, const bson_t*);
 	bool AppendBool(const char*, bool);
 	bool ConcatenateDocument( const bson_t*);

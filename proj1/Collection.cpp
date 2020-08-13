@@ -5,7 +5,7 @@
 #include"InsertManyReturn.h"
 #include"UpdateReturn.h"
 #include"DeleteReturn.h"
-
+#include"DocumentSerializer.h"
 Collection::Collection()
 {
 }
@@ -88,14 +88,20 @@ InsertManyReturnStruct Collection::CollectionInsertMany(CBson* Bsons, const size
 }
 
 
+
+uint64_t Collection::CountDocuments(CBson* filter) {
+	return mongoc_collection_count_documents(this->GetCollection(), filter->GetDocument(), NULL, NULL, NULL, NULL);
+}
+
 /************************************Query************************************/
 mongoc_cursor_t* Collection::CollectionFind(CBson* filter)
 {
-	bson_t *pOptions = nullptr;
+	CBson Options;
 	mongoc_read_prefs_t *pReadPrefs = nullptr;
-
+	mongoc_cursor_t *Cursor;
+	Cursor = mongoc_collection_find_with_opts(this->GetCollection(), filter->GetDocument(), NULL, pReadPrefs);
 	
-	return	mongoc_collection_find_with_opts(this->GetCollection(), filter->GetDocument(), pOptions, pReadPrefs);
+	return Cursor;
 }
 
 /************************************Update************************************/

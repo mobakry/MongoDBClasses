@@ -99,7 +99,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClInclude Include="Bson.h" />
     <ClInclude Include="BsonSerializer.h" />
+    <ClInclude Include="BsonSerializer2.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Collection.h" />
     <ClInclude Include="Cursor.h" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClCompile Include="Bson.cpp" />
     <ClCompile Include="BsonSerializer.cpp" />
+    <ClCompile Include="BsonSerializer2.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Collection.cpp" />
     <ClCompile Include="Cursor.cpp" />
