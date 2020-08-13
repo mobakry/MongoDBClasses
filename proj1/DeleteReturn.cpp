@@ -21,3 +21,4 @@ void CDeleteReturn::Serialize(CBson* Document) {
 		SetReturnStruct(TRUE, deletedCountValue->value.v_int32);
 	}
 }
+

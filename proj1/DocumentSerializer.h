@@ -7,8 +7,8 @@ class CDocumentSerializer: public CBsonSerializer2
 public:
 	CDocumentSerializer();
 	~CDocumentSerializer();
-	void Serialize(CBson*,Person&);
-	void SerializeNestedArray(bson_iter_t*, Person&);
+	void Serialize(CBson*, PERSON_STR&);
+	void SerializeNestedArray(bson_iter_t*, PERSON_STR&);
 
 };
 

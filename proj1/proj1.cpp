@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 	bool InsertOneResult;
 	bool DeleteOneResult;
 	InsertManyReturnStruct InsertManyReturn;
-	Person *person;
+	PERSON_STR *person;
 	UpdateReturnStruct		UpdateReturn;
 	DeleteReturnStruct		DeleteReturn;
 	mongoc_cursor_t *Cursor = nullptr;
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 
 	
 
-	person = new Person[NoOfDocuents];
+	person = new PERSON_STR[NoOfDocuents];
 	Cursor = coll.CollectionFind(&BsonFilter);
 
 	printf("%d\n", NoOfDocuents);
@@ -121,8 +121,7 @@ int main(int argc, char *argv[])
 	printf("NumberOfRelatives : %d\n", person[PersonId].NumberOfRelatives);
 	printf("Family:\n");
 	for (int i = 0; i < person[PersonId].NumberOfRelatives; i++) {
-
-		printf("\tName : %s\n", person[PersonId].FamilyMembers[i].Name);
+		printf("\tName : %s\t\t", person[PersonId].FamilyMembers[i].Name);
 		printf("\tRelation : %s\n\n", person[PersonId].FamilyMembers[i].Relation);
 	}
 	PersonId++;

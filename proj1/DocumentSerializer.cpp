@@ -12,7 +12,7 @@ CDocumentSerializer::~CDocumentSerializer()
 {
 }
 
-void CDocumentSerializer::Serialize(CBson *Document,Person &person) {
+void CDocumentSerializer::Serialize(CBson *Document, PERSON_STR &person) {
 
 	char Key[64];
 	bson_iter_t iter;
@@ -41,7 +41,7 @@ void CDocumentSerializer::Serialize(CBson *Document,Person &person) {
 	}
 }
 
-	void CDocumentSerializer::SerializeNestedArray(bson_iter_t* iter, Person &person) {
+	void CDocumentSerializer::SerializeNestedArray(bson_iter_t* iter, PERSON_STR &person) {
 
 		char Key[64];
 		const bson_value_t *FieldValue = nullptr;

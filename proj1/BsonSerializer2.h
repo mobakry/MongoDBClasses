@@ -5,6 +5,6 @@
 class CBsonSerializer2
 {
 public:
-	virtual void Serialize(CBson*,Person&) = 0;
+	virtual void Serialize(CBson*,PERSON_STR&) = 0;
 };
 
