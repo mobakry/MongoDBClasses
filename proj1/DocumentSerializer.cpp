@@ -1,77 +1,94 @@
-#include "stdafx.h"
+#include"stdafx.h"
 #include "DocumentSerializer.h"
-#include<string.h>
 
 
-CDocumentSerializer::CDocumentSerializer()
+
+void  CDocumentSerializer::Serialize(const CBsonDocument &Document, PERSON_STR &PersonInfo) 
 {
-}
+	bson_iter_t Iterator;
+	bson_iter_t FamilyMembersIterator;
+	const bson_value_t* Value;
+ 	char Key[MAX_STRING_LENGTH];
+
+	if (!bson_iter_init(&Iterator, Document.GetDocumentStr())) return;
 
 
-CDocumentSerializer::~CDocumentSerializer()
-{
-}
+	PersonInfo.FamilyMembersCount = 0;
 
-void CDocumentSerializer::Serialize(CBson *Document, PERSON_STR &person) {
+	while (bson_iter_next(&Iterator)) {
 
-	char Key[64];
-	bson_iter_t iter;
-	const bson_value_t *FieldValue = nullptr;
-	
-	if (bson_iter_init(&iter, Document->GetDocument())) {
+		strcpy(Key, bson_iter_key(&Iterator));
 
-		while (bson_iter_next(&iter)) {
+ 		if (strcmp(Key, "name") == 0 && BSON_ITER_HOLDS_UTF8(&Iterator)) {
 
-			strcpy(Key, bson_iter_key(&iter));
-			FieldValue = bson_iter_value(&iter);
+			Value = bson_iter_value(&Iterator);
+			if (Value->value_type == BSON_TYPE_UTF8) {
+				strcpy_s(PersonInfo.Name, Value->value.v_utf8.str);
+ 			}
 
-			if ((strcmp(Key, "name") == 0) &&  BSON_ITER_HOLDS_UTF8(&iter) ) {
-				strcpy(person.Name, FieldValue->value.v_utf8.str);
-				continue;
-			}
-			if ((strcmp(Key, "age") == 0) && BSON_ITER_HOLDS_INT32(&iter)) {
-				FieldValue = bson_iter_value(&iter);
-				person.Age = FieldValue->value.v_int32;
-				continue;
-			}
-			if ((strcmp(Key, "family") == 0) && BSON_ITER_HOLDS_ARRAY(&iter)) {
-				SerializeNestedArray(&iter,person);
-			}
+		}
+
+ 		else if (strcmp(Key, "age") == 0 && (BSON_ITER_HOLDS_INT32(&Iterator) || BSON_ITER_HOLDS_DOUBLE(&Iterator))) {
+
+			Value = bson_iter_value(&Iterator);
+			if (Value->value_type == BSON_TYPE_INT32) {
+				PersonInfo.Age = Value->value.v_int32;
+ 			}
+		}
+
+		else if (strcmp(Key, "family") == 0 && BSON_ITER_HOLDS_ARRAY(&Iterator)) {
+
+			if (!bson_iter_recurse(&Iterator, &FamilyMembersIterator)) continue;
+			SerializeFamilyMemberArray(&FamilyMembersIterator, PersonInfo);
+			
 		}
 	}
 }
 
-	void CDocumentSerializer::SerializeNestedArray(bson_iter_t* iter, PERSON_STR &person) {
 
-		char Key[64];
-		const bson_value_t *FieldValue = nullptr;
-		bson_iter_t  child, child2;
-		uint64_t FamilyMemberId = 0;
-		//Reset number of family members
-		person.NumberOfRelatives = 0;
-		bson_iter_recurse(iter, &child);
-		
-		//Loop over family members
-		while (bson_iter_next(&child)) {
-			
-			//increment number of family members
-			person.NumberOfRelatives++;
-			
-			//Parsing data for each member
-			bson_iter_recurse(&child,&child2);
-			while (bson_iter_next(&child2)) {
-				strcpy(Key, bson_iter_key(&child2));
-				FieldValue = bson_iter_value(&child2);
+void CDocumentSerializer::SerializeFamilyMemberArray(bson_iter_t* Iterator, PERSON_STR& PersonInfo)
+{
+	bson_iter_t ArrayIterator;
 
-				if ((strcmp(Key, "name") == 0) && BSON_ITER_HOLDS_UTF8(&child2)) {
-					strcpy(person.FamilyMembers[FamilyMemberId].Name, FieldValue->value.v_utf8.str);
-					continue;
-				}
-				if ((strcmp(Key, "relation") == 0) && BSON_ITER_HOLDS_UTF8(&child2)) {
-					strcpy(person.FamilyMembers[FamilyMemberId].Relation, FieldValue->value.v_utf8.str);
-				}
-				FamilyMemberId++;
-			}
+	while (bson_iter_next(Iterator)) {
+
+		if (BSON_ITER_HOLDS_DOCUMENT(Iterator) && bson_iter_recurse(Iterator, &ArrayIterator)) {
+			
+			if (PersonInfo.FamilyMembersCount >= MAX_MEMBERS)  break;
+			
+			SerializeFamilyMemberDocument(&ArrayIterator, PersonInfo);
+			PersonInfo.FamilyMembersCount++;
+
 		}
 
 	}
+}
+
+void CDocumentSerializer::SerializeFamilyMemberDocument(bson_iter_t* Iterator, PERSON_STR& PersonInfo) 
+{
+	const bson_value_t* Value;
+	char Key[MAX_STRING_LENGTH];
+
+	while (bson_iter_next(Iterator)) {
+
+		strcpy_s(Key, bson_iter_key(Iterator));
+
+		if (strcmp(Key, "name") == 0 && BSON_ITER_HOLDS_UTF8(Iterator)) {
+
+			Value = bson_iter_value(Iterator);
+			if (Value->value_type == BSON_TYPE_UTF8) {
+				strcpy(PersonInfo.FamilyMembers[PersonInfo.FamilyMembersCount].Name, Value->value.v_utf8.str);
+			}
+
+		}
+
+		else if (strcmp(Key, "relation") == 0 && BSON_ITER_HOLDS_UTF8(Iterator)) {
+
+			Value = bson_iter_value(Iterator);
+			if (Value->value_type == BSON_TYPE_UTF8) {
+				strcpy(PersonInfo.FamilyMembers[PersonInfo.FamilyMembersCount].Relation, Value->value.v_utf8.str);
+			}
+
+		}
+	}
+}

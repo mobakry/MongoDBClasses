@@ -1,5 +1,20 @@
-﻿  DeleteReturn.cpp
-  Collection.cpp
+﻿  DomainEntities.cpp
+c:\src\proj1\proj1\domainentities.cpp(82): warning C4800: 'const int32_t': forcing value to bool 'true' or 'false' (performance warning)
+c:\src\proj1\proj1\domainentities.cpp(86): warning C4800: 'const int32_t': forcing value to bool 'true' or 'false' (performance warning)
+c:\src\proj1\proj1\domainentities.cpp(104): warning C4101: 'Key': unreferenced local variable
+c:\src\proj1\proj1\domainentities.cpp(104): warning C4101: 'TempBuffer': unreferenced local variable
+c:\src\proj1\proj1\domainentities.cpp(106): warning C4101: 'ElementIter': unreferenced local variable
   Generating Code...
-  proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.exe
-  proj1.vcxproj -> C:\Users\IGFI\Desktop\Abdou\VS_Projects\proj1\x64\Debug\proj1.pdb (Full PDB)
+  Compiling...
+  proj1.cpp
+  UpdateResultSerializer.cpp
+  MongoUri.cpp
+  MongoDataBase.cpp
+  MongoCollection.cpp
+  MongoClient.cpp
+  InsertResultSerializer.cpp
+  EntitySerializer.cpp
+  DeleteResultSerializer.cpp
+  Generating Code...
+  proj1.vcxproj -> C:\Src\proj1\x64\Debug\proj1.exe
+  proj1.vcxproj -> C:\Src\proj1\x64\Debug\proj1.pdb (Full PDB)

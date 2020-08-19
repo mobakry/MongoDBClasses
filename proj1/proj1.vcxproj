@@ -145,31 +145,17 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bson.h" />
-    <ClInclude Include="BsonSerializer.h" />
-    <ClInclude Include="BsonSerializer2.h" />
-    <ClInclude Include="Client.h" />
-    <ClInclude Include="Collection.h" />
-    <ClInclude Include="Cursor.h" />
-    <ClInclude Include="DataBase.h" />
-    <ClInclude Include="DeleteReturn.h" />
-    <ClInclude Include="DocumentSerializer.h" />
-    <ClInclude Include="InsertManyReturn.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="UpdateReturn.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Bson.cpp" />
-    <ClCompile Include="BsonSerializer.cpp" />
-    <ClCompile Include="BsonSerializer2.cpp" />
-    <ClCompile Include="Client.cpp" />
-    <ClCompile Include="Collection.cpp" />
-    <ClCompile Include="Cursor.cpp" />
-    <ClCompile Include="DataBase.cpp" />
-    <ClCompile Include="DeleteReturn.cpp" />
-    <ClCompile Include="DocumentSerializer.cpp" />
-    <ClCompile Include="InsertManyReturn.cpp" />
+    <ClCompile Include="BsonDocument.cpp" />
+    <ClCompile Include="DeleteResultSerializer.cpp" />
+    <ClCompile Include="DomainEntities.cpp" />
+    <ClCompile Include="EntitySerializer.cpp" />
+    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="InsertResultSerializer.cpp" />
+    <ClCompile Include="MongoClient.cpp" />
+    <ClCompile Include="MongoCollection.cpp" />
+    <ClCompile Include="MongoCursor.cpp" />
+    <ClCompile Include="MongoDataBase.cpp" />
+    <ClCompile Include="MongoUri.cpp" />
     <ClCompile Include="proj1.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -177,7 +163,30 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="UpdateReturn.cpp" />
+    <ClCompile Include="UpdateResultSerializer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BsonDocument.h" />
+    <ClInclude Include="BsonSerializer.h" />
+    <ClInclude Include="CustomDocument.h" />
+    <ClInclude Include="Debug.h" />
+    <ClInclude Include="DeleteResultSerializer.h" />
+    <ClInclude Include="DocumentSerializer.h" />
+    <ClInclude Include="DomainEntities.h" />
+    <ClInclude Include="entity.h" />
+    <ClInclude Include="EntitySerializer.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="InsertResultSerializer.h" />
+    <ClInclude Include="MongocInit.h" />
+    <ClInclude Include="MongoClient.h" />
+    <ClInclude Include="MongoCollection.h" />
+    <ClInclude Include="MongoCursor.h" />
+    <ClInclude Include="MongoDataBase.h" />
+    <ClInclude Include="MongoUri.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TList.h" />
+    <ClInclude Include="UpdateResultSerializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

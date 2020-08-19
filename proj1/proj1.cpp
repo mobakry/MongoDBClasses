@@ -1,148 +1,165 @@
-#include "stdafx.h"
+#include"stdafx.h"
 #include <iostream>
-#include"bson.h"
-#include"Client.h"
-#include"Bson.h"
-#include"Cursor.h"
-#include"DocumentSerializer.h"
+#include "mongoc.h"
+#include "MongoClient.h"
+#include "BsonDocument.h"
+#include "MongoCursor.h"
+#include "CustomDocument.h"
+#include "MongocInit.h"
+#include "DocumentSerializer.h"
 
+#include "EntitySerializer.h"
+#include"DomainEntities.h"
 
-using namespace std;
-
-int main(int argc, char *argv[])
+void Print(const PERSON_STR& Person)
 {
+	std::cout << "name: " << Person.Name << " Age: " << Person.Age << " familyCount: " << Person.FamilyMembersCount << std::endl;
+	for (int i = 0; i < Person.FamilyMembersCount; i++) {
+		std::cout << "\t<name: " << Person.FamilyMembers[i].Name << " , relation: " << Person.FamilyMembers[i].Relation << ">" << std::endl;
 
-	const char *l_pConnectionString = "mongodb://localhost:27017";
-	
-	/*****************************************Documents*****************************************/
-
-	char *document1 = "{\"date\"	  : \"11/08/2020\",																				\
-						\"name\"	  : {	\"First\" : \"Mohammed\", \"last\"  : \"Abdou\"	},										\
-						\"languages\" :  [\"C++\", \"Java\", \"C#\"],																\
-						\"degrees\"	  : [{\"degree\":\"BA\", \"School\": \"Cairo\"},{\"degree\":\"PhD\", \"School\": \"Cairo\"}] 	\
-						}";
-	char *document2 = "{\"date\"	  : \"12/08/2020\",																				\
-						\"name\"	  : {	\"First\" : \"Ali\", \"last\"  : \"Gaber\"	},										\
-						\"languages\" :  [\"Ruby\", \"Python\"],																\
-						\"degrees\"	  : [{\"degree\":\"BA\", \"School\": \"AS\"},{\"degree\":\"Diploma\", \"School\": \"AS\"}] 	\
-						}";
-
-	char *Selector = "{ \"date\": \"11/08/2020\" }";
-	char *Update = "{ \"$set\" : { \"date\":\"05/10/2020\"} }";
-	char *Replacement = "{ \"date\" : \"20/9/2020\" }";
-	char *Filter = "{ }";
-
-	/*****************************************end of Documents*************************************/
-
-
-	/*****************************************BSON Objects*****************************************/
-	/*
-	CBson		BsonSelector(Selector, -1);
-	CBson		BsonUpdate(Update, -1);
-	CBson		Bson1(document1, -1);
-	CBson		Bson2(document2, -1);
-	CBson		BsonReplacement(Replacement, -1);
-	CBson		BsonArray[2] = {Bson1,Bson2};
-	*/
-	CBson		BsonFilter(Filter, -1);
-	CBson DocumentObject;
-	bson_t *Document = nullptr;
-	
-	/*****************************************end of BSON Objects**********************************/
-
-
-	/*****************************************Return Types*****************************************/
-	bool InsertOneResult;
-	bool DeleteOneResult;
-	InsertManyReturnStruct InsertManyReturn;
-	PERSON_STR *person;
-	UpdateReturnStruct		UpdateReturn;
-	DeleteReturnStruct		DeleteReturn;
-	mongoc_cursor_t *Cursor = nullptr;
-	
-	CDocumentSerializer DocumentSerializer;
-	/*****************************************end of Return Types**********************************/
-	
-
-	/*****************************************General Defines*****************************************/
-
-	uint64_t NoOfDocuents = 0;
-	uint64_t PersonId = 0;
-
-	/*****************************************end of General Defines**********************************/
-	
-	/*
-	* Required to initialize libmongoc's internals
-	*/
-	mongoc_init();
-
-	/*
-	* Create a new client instance
-	*/
-	Client client(l_pConnectionString);
-
-	/*
-	* Get a handle on the database "db_name" and collection "coll_name"
-	*/
-	const char *l_pDataBaseName = "db_name";
-	const char *l_pCollectionName = "test";
-	
-	DataBase db = client.database(l_pDataBaseName);
-	Collection coll = client.collection(l_pDataBaseName, l_pCollectionName);
-
-	NoOfDocuents = coll.CountDocuments(&BsonFilter);
-
-	/*****************************************CRUD Operations*****************************************/
-	/*
-	InsertOneResult = coll.CollectionInsertOne(&Bson1);
-	
-	InsertManyReturn = coll.CollectionInsertMany(BsonArray,2);
-	printf("Result : %d\n", InsertManyReturn.Result);
-	printf("InsertCount : %d\n", InsertManyReturn.InsertCount);
-	UpdateReturn = coll.CollectionUpdateOne(&BsonSelector,&BsonUpdate);
-	UpdateReturn = coll.CollectionUpdateMany(&BsonSelector, &BsonUpdate);
-	UpdateReturn = coll.CollectionReplaceOne(&BsonSelector, &BsonReplacement);
-	DeleteOneResult = coll.CollectionDeleteOne(&BsonSelector);
-	*/
-
-	
-
-	person = new PERSON_STR[NoOfDocuents];
-	Cursor = coll.CollectionFind(&BsonFilter);
-
-	printf("%d\n", NoOfDocuents);
-	while (mongoc_cursor_next(Cursor, (const bson_t**)&Document)) {
-	DocumentObject.SetDocument(Document);
-	DocumentSerializer.Serialize(&DocumentObject, person[PersonId]);
-
-	printf("No %d:\n", PersonId);
-	printf("Name : %s\n", person[PersonId].Name);
-	printf("Age : %d\n", person[PersonId].Age);
-	printf("NumberOfRelatives : %d\n", person[PersonId].NumberOfRelatives);
-	printf("Family:\n");
-	for (int i = 0; i < person[PersonId].NumberOfRelatives; i++) {
-		printf("\tName : %s\t\t", person[PersonId].FamilyMembers[i].Name);
-		printf("\tRelation : %s\n\n", person[PersonId].FamilyMembers[i].Relation);
 	}
-	PersonId++;
+
+	cout << endl;
+}
+
+
+void Print(const ENTITY_STR &Entity)
+{
+	cout << "Id: " << Entity.Id << "\tentityType: " << static_cast<int>(Entity.EntityType) << "\tNOfFrameFacts: " << Entity.NOfFrameFacts << "\tNOfEntityInfo: " << Entity.NOfEntityInfo;
+	cout << "\tNOfObjects: " << Entity.NOfObjects << "\tFrame.EntityId: " << Entity.Frame.EntityId << std::endl;
+
+	cout << "________________________________________________________________________________________________" << endl;
+}
+
+
+void Print(const DOMAIN_ENTITY_STR *DomainEntities, int ArrayCount)
+{
+	for (int i = 0; i < ArrayCount; i++) {
+		cout << "Language: " << DomainEntities[i].Language << "\tTypeId: " << DomainEntities[i].Type_id << "\tId: " << DomainEntities[i].Entity_id;
+		cout << "\tParendId: " << DomainEntities[i].Parent_id << "\tClassId: " << DomainEntities[i].ClassId << "\tPropertyId: " << DomainEntities[i].PropertyId << std::endl;
+
+		cout << "________________________________________________________________________________________________" << endl;
 	}
+
+}
+
+int main(int argc, char* argv[])
+{
+	const char *CMongoUri_string = "mongodb://localhost:27017";
+	const char *databaseName = "Alkhwarizmy";
+	const char *collectionName = "newEntity";
+
+	//["LanguageData"] ["Corpus"]
+	//["newMongoDB"] ["developers"]
+	//["ChatBot_208"] ["entities"]
+
+	CBsonDocument TempDocument;
+	CBsonDocument Document;
+	CBsonDocument LastDocument;
+	CBsonDocument DocumentWithId;
+	CBsonDocument filter;
+	CBsonDocument Query;
+	CBsonDocument EmptyQuery;
+	CBsonDocument Projection;
+	CBsonDocument Update;
+	CBsonDocument StatusCommand;
+	CBsonDocument ExplainCommand;
+	CBsonDocument Index;
+
+	CBsonDocument FilterEntity;
+
+
+
+	LastDocument.FromJson("{\"name\":{\"first\" : \"Moustafa\", \"last\" : \"Shehab\" }}");
+	DocumentWithId.FromJson("{\"_id\":167651461, \"Info\":\"Dummy Document\"}");
+	filter.FromJson("{\"name.first\":\"magdy\"}");
+	Query.FromJson("{\"name.first\" : {\"$ne\" : \"Tamer\"}}");
+	EmptyQuery.FromJson("{}");
+	//  Projection.FromJson("{\"projection\" :{ \"name\" : 1 , \"_id\" : 0 } }");
+	Projection.FromJson("{\"projection\" :{\"_id\" : 0 } }");
+	Update.FromJson("{\"$set\" : {\"name\" : {\"first\" : \"MMagdy\", \"last\" : \"MMousa\" }}}");
+	StatusCommand.FromJson("{\"collStats\": \"Corpus\"}");
+	ExplainCommand.FromJson("{ \"explain\" : { \"find\" : \"Corpus\" , \"filter\" : { \"name.first\" : \"Moustafa\" }}}");
+	Index.FromJson("{\"name.first\":1}");
+
+	FilterEntity.FromJson("{\"project_id\":\"100\"}");
+
+
+	CMongocInit			Mongo;
+	CMongoClient	Client(CMongoUri_string);
+
+	auto Collection = Client[databaseName][collectionName];
+
+
+	//auto reply = Collection.deleteMany(filter);
+	//cout << "Result: " << reply.Result << " DeletedCount: " << reply.DeletedCount << endl;
+
+	//auto reply = Collection.InsertMany(Documents,3);
+	//reply.displayContent();
+
+	//auto reply = Collection.UpdateMany(filter, Update);
+	//cout << "Result: " << reply.Result << " MatchedCount: " << reply.MatchedCount << " ModifiedCount: " << reply.ModifiedCount << endl;
+
+	//auto reply = Collection.deleteMany(filter);
+	//reply.displayContent();
+
 	/*
-	DeleteReturn = coll.CollectionDeleteMany(&BsonSelector);
-	printf("Result : %d\n", DeleteReturn.Result);
-	printf("DeletedCount : %d\n", DeleteReturn.deletedCount);
-
-	printf("matchedCount : %d\n", UpdateReturn.matchedCount);
-	printf("modifiedCount : %d\n", UpdateReturn.modifiedCount);
+	if (Collection.CreateIndex(Index, "Second_Index")) {
+	debug("Index Created \n");
+	}
 	*/
-	/*****************************************end of CRUD Operations*****************************************/
 
+	//Collection.DropIndex("Second_Index");
 
-	//BsonSelector.~CBson();
-	//BsonUpdate.~CBson();
-	client.~Client();
-	db.~DataBase();
-	coll.~Collection();
+	//auto status = Collection.WriteCommand(ExplainCommand);
+
+	CMongoCursor Cursor = Collection.FindWithOptions(FilterEntity);
+	//CMongoCursor Cursor = Collection.FindWithOptions(EmptyQuery,Projection);
+
+	/*
+	int64_t DocumentsCount = Collection.GetDocumentsCount(EmptyQuery);
+	cout << "Documents Count: " << DocumentsCount << endl;
+
+	CEntitySerializer	EntitySerializer;
+	CBsonDocument				EntityDocument;
+	ENTITY_STR *Entities = new ENTITY_STR[DocumentsCount];
+
+	cout << "sizeof(ENTITY_STR): " << sizeof(ENTITY_STR) << ", DocumentsCount: " << DocumentsCount << ", Allocated Size: " << DocumentsCount * sizeof(ENTITY_STR) << endl;
+
+	int i = 0;
+
+	do {
+
+		EntityDocument = Cursor.GetNextDocument();
+
+		if (EntityDocument == CBsonDocument()) break;
+
+		EntitySerializer.Serialize(EntityDocument, Entities[i++]);
+
+	} while (1);
+
+	for (int i = 0; i < DocumentsCount; i++) {
+		//Print(Entities[i]);
+		delete[] Entities[i].Objects;
+		delete[] Entities[i].EntityInfo;
+		delete[] Entities[i].FrameFacts;
+	}
+
+	delete[] Entities;
+	*/
+
+	CDomainEntities		DomainEntity;
+	DOMAIN_ENTITY_STR	*Data;
+	CBsonDocument		EntityDocument;
+	int ArrayCount = 0;
+
+	EntityDocument = Cursor.GetNextDocument();
 	
-	mongoc_cleanup();
-	return 0;
+	DomainEntity.Serialize(EntityDocument, &Data, ArrayCount);
+
+	cout << ArrayCount << endl;
+
+	Print(Data, ArrayCount);
+
+	return EXIT_SUCCESS;
 }
